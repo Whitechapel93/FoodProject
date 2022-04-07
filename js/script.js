@@ -2,40 +2,42 @@ window.addEventListener('DOMContentLoaded', () => {
 
 
     //Tabs
-    const tabs = document.querySelectorAll('.tabheader__item'),
-          tabsContent = document.querySelectorAll('.tabcontent'),
-          tabsParent = document.querySelector('.tabheader__items');
+    let tabs = document.querySelectorAll('.tabheader__item'),
+        tabsContent = document.querySelectorAll('.tabcontent'),
+        tabsParent = document.querySelector('.tabheader__items');
 
-    function hideTabContent () {
+    function hideTabContent() {
+
         tabsContent.forEach(item => {
-            item.style.display = 'none'
+            item.classList.add('hide');
+            item.classList.remove('show', 'fade');
         });
-        tabs.forEach( item => {
-            item.classList.remove('tabheader__item_active')
-        })
+
+        tabs.forEach(item => {
+            item.classList.remove('tabheader__item_active');
+        });
     }
 
-
-
-    function showTabContent (i=0) {
-        tabsContent[i].style.display = 'block'
-        tabs[i].classList.add('tabheader__item_active')
+    function showTabContent(i = 0) {
+        tabsContent[i].classList.add('show', 'fade');
+        tabsContent[i].classList.remove('hide');
+        tabs[i].classList.add('tabheader__item_active');
     }
 
     hideTabContent();
     showTabContent();
 
-    tabsParent.addEventListener('click', (e) => {
-        const target = e.target;
-        if (target && target.classList.contains('tabheader__item')) {
+    tabsParent.addEventListener('click', function(event) {
+        const target = event.target;
+        if(target && target.classList.contains('tabheader__item')) {
             tabs.forEach((item, i) => {
                 if (target == item) {
                     hideTabContent();
                     showTabContent(i);
                 }
-            })
+            });
         }
-    })
+    });
 
     //Timer
 
@@ -46,7 +48,7 @@ window.addEventListener('DOMContentLoaded', () => {
         const days = Math.floor(t / (1000 * 60 * 60 *24));
         const hours = Math.floor((t / (1000 * 60 * 60) % 24));
         const minutes = Math.floor((t / 1000 / 60) % 60);
-        const seconds = Math.floor((t / 60) % 60);
+        const seconds = Math.floor((t / 1000) % 60);
 
         return {
             'total': t,
@@ -91,4 +93,41 @@ window.addEventListener('DOMContentLoaded', () => {
 
     setClock('.timer', deadline)
 
+//Modal
+
+
+    const modalTrigger = document.querySelectorAll('[data-modal]');
+    const modal = document.querySelector('.modal');
+    const modalCloseBtn = document.querySelector('[data-close]');
+
+
+
+
+    modalTrigger.forEach(btn => {
+        btn.addEventListener('click', () => {
+            modal.classList.add('show');
+            modal.classList.remove('hide');
+            document.body.style.overflow='hidden'
+        })
+    })
+
+    function modalClose () {
+        modal.classList.add('hide');
+        modal.classList.remove('show');
+        document.body.style.overflow=''
+    }
+
+    modalCloseBtn.addEventListener('click', modalClose)
+
+    modal.addEventListener('click', (e) => {
+        if (e.target === modal) {
+            modalClose()
+        }
+    })
+
+    document.addEventListener('keydown', (e) => {
+        if (e.code === 'Escape') {
+            modalClose()
+        }
+    })
 })
