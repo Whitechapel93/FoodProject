@@ -41,7 +41,7 @@ window.addEventListener('DOMContentLoaded', () => {
 
     //Timer
 
-    const deadline = '2022-04-09';
+    const deadline = '2022-04-20';
 
     function  getTimeRemaining(endtime) {
         const t = Date.parse(endtime)- Date.parse(new Date());
@@ -104,12 +104,16 @@ window.addEventListener('DOMContentLoaded', () => {
 
 
     modalTrigger.forEach(btn => {
-        btn.addEventListener('click', () => {
-            modal.classList.add('show');
-            modal.classList.remove('hide');
-            document.body.style.overflow='hidden'
-        })
-    })
+        btn.addEventListener('click', modalOpen)})
+
+    function modalOpen () {
+        modal.classList.add('show');
+        modal.classList.remove('hide');
+        document.body.style.overflow='hidden'
+        clearInterval(modalTimer)
+    }
+
+    const modalTimer = setInterval(modalOpen, 5000)
 
     function modalClose () {
         modal.classList.add('hide');
@@ -130,4 +134,12 @@ window.addEventListener('DOMContentLoaded', () => {
             modalClose()
         }
     })
+
+    function showModalByScroll () {
+        if (window.pageYOffset+document.documentElement.clientHeight >= document.documentElement.scrollHeight) {
+            modalOpen();
+            removeEventListener('scroll', showModalByScroll)
+        }
+    }
+    window.addEventListener('scroll', showModalByScroll)
 })
